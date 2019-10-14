@@ -1,0 +1,19 @@
+server:
+  port: 8080
+spring:
+  jpa:
+    generate-ddl: false
+    show-sql: true
+    hibernate:
+      ddl-auto: none
+  datasource:                         #\u6307\u5B9A\u6570\u636E\u6E90
+    platform: h2                      #\u6307\u5B9A\u6570\u636E\u6E90\u7C7B\u578B
+    schema: classpath:schema.sql      #\u6307\u5B9Ah2\u6570\u636E\u6E90\u5EFA\u8868\u811A\u672C
+    data: classpath:data.sql          #\u6307\u5B9Ah2\u6570\u636E\u5E93\u7684\u6570\u636E\u811A\u672C
+logging:                              #\u914D\u7F6E\u65E5\u5FD7\u7EA7\u522B\uFF0C\u8BA9hibernate\u6253\u5370\u6267
+  level:
+    root: INFO
+    org.hibernate: INFO
+    org.hibernate.type.descniptor.sql.BasicBinder: TRACE
+    org.hibernate.ype.descriptor.sql.BasicExtractor: TRACE
+
