@@ -1,6 +1,6 @@
 package com.ws.cloud.userprovider.dao;
 
-import com.ws.cloud.userprovider.model.User;
+import com.ws.cloud.userprovider.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

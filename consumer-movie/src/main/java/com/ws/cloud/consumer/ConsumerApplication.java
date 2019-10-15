@@ -1,10 +1,10 @@
-package com.ws.cloud.userprovider;
+package com.ws.cloud.consumer;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.cloud.client.discovery.EnableDiscoveryClient;
-import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.web.client.RestTemplate;
 
 /**
  * 可以使用@EnableEurekaClient注解替代@EnableDiscoveryClient。在Spring Cloud中，服务发现组件有多种选择，例如Zookeeper、Consul等。
@@ -15,10 +15,18 @@ import org.springframework.cloud.netflix.eureka.EnableEurekaClient;
 
 @SpringBootApplication
 @EnableDiscoveryClient
-public class UserProviderApplication {
+public class ConsumerApplication {
+
+
+    @Bean
+    public RestTemplate createTemplate(){
+        return new RestTemplate();
+    }
+
 
     public static void main(String[] args) {
-        SpringApplication.run(UserProviderApplication.class, args);
+        SpringApplication.run(ConsumerApplication.class, args);
     }
+
 
 }

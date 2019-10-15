@@ -1,0 +1,23 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: microservice-consumer-movie #用于指定注册到Eureka Server上的应用名称
+
+eureka:
+  client:
+    default-zone: http://localhost:8761/eureka/
+  instance:
+    prefer-ip-address: true #表示将自己的IP注册到Eureka Server , 如不配置该属性或将其设置为false,则表示注册微服务所在操作系统的hostname到Eureka
+
+#设置info的属性可以在http://localhost:8080/info 查看
+info:
+  app:
+    name: @project.artifactId@
+    encoding: @project.build.sourceEncoding@
+    java:
+      source: @java.version@
+      targer: @java.version@
+
+

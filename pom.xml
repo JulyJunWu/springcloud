@@ -11,6 +11,7 @@
 
     <modules>
         <module>user-provider</module>
+        <module>consumer-movie</module>
     </modules>
 
 </project>
