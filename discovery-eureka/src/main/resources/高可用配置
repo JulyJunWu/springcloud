@@ -6,7 +6,7 @@ spring:
   application:
     name: discovery-eureka-server-ha
   profiles:
-    active: zws-two
+    active: zws-one
 logging:
   level: debug
 
@@ -31,7 +31,7 @@ eureka:
     #register-with-eureka: false
     #表示是否从Eureka Server获取注册信息，默认为true。单点的Eureka Server,不需要同步其他的Eureka Server节点的数据，故而设为false
     #fetch-registry: false
-    service-url:
+    #service-url:
       #设置与Eureka Server交互的地址， 查询服务和注册服务都需要依赖这个地址。默认h是http://localhost:8761/eureka多个地址可使用，分隔
       #把自己注册到这个zws-two这个eureka上去
       default-zone: http://zws-two:8762/eureka/

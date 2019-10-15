@@ -7,7 +7,7 @@ spring:
 
 eureka:
   client:
-    default-zone: http://localhost:8761/eureka/
+    default-zone: http://zws-one:8761/eureka/
   instance:
     prefer-ip-address: true #表示将自己的IP注册到Eureka Server , 如不配置该属性或将其设置为false,则表示注册微服务所在操作系统的hostname到Eureka
 

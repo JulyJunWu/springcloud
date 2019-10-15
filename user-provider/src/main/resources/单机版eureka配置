@@ -34,8 +34,7 @@ info:
 eureka:
   client:
     service-url:
-      #其实配置一个eureka也行,因为eureka server之间会同步数据
-      default-zone: http://zws-two:8761/eureka/
+      default-zone: http://localhost:8761/eureka/
   instance:
       #表示将自己的IP注册到Eureka Server , 如不配置该属性或将其设置为false,则表示注册微服务所在操作系统的hostname到Eureka
       prefer-ip-address: true

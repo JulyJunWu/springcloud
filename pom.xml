@@ -12,6 +12,8 @@
     <modules>
         <module>user-provider</module>
         <module>consumer-movie</module>
+        <module>discovery-eureka</module>
+        <module>discovery-eureka2</module>
     </modules>
 
 </project>
