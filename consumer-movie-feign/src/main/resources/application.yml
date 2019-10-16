@@ -5,13 +5,20 @@ spring:
   application:
     name: microservice-consumer-movie #用于指定注册到Eureka Server上的应用名称
 
+  http:
+    multipart:
+      #单个文件最大大小
+      max-file-size: 1000MB
+      #上传文件数据总大小
+      max-request-size: 2500MB
+
 eureka:
   client:
     default-zone: http://zws-one:8761/eureka/
   instance:
     prefer-ip-address: true #表示将自己的IP注册到Eureka Server , 如不配置该属性或将其设置为false,则表示注册微服务所在操作系统的hostname到Eureka
 
-#设置info的属性可以在http://localhost:8080/info 查看
+#设置info的属性可以在http://ip:port/info 查看
 info:
   app:
     name: @project.artifactId@

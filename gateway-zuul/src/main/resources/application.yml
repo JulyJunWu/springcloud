@@ -35,3 +35,4 @@ zuul:
 logging:
   level:
     com.netflix: DEBUG
+
