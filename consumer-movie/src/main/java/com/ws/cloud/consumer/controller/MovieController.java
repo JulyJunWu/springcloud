@@ -30,7 +30,8 @@ public class MovieController {
 
     @GetMapping("/user/{id}")
     public User findByUserId(@PathVariable Long id) {
-        return restTemplate.getForObject("http://127.0.0.1:8080/user/" + id, User.class);
+        //开启负载均衡后,通过ip访问不可行
+        return restTemplate.getForObject("http://192.168.4.13:8080/user/" + id, User.class);
     }
 
     @GetMapping("/{id}")

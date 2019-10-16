@@ -1,10 +1,8 @@
-package com.ws.cloud.userprovider.dao;
+package provider.dao;
 
-import com.ws.cloud.userprovider.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
-
-import java.util.List;
+import provider.entity.User;
 
 /**
  * @author Jun
@@ -12,6 +10,4 @@ import java.util.List;
  */
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
-
-    List<User> findByIdAndName(Long id, String name);
 }

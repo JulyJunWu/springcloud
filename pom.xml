@@ -14,6 +14,9 @@
         <module>consumer-movie</module>
         <module>discovery-eureka</module>
         <module>discovery-eureka2</module>
+        <module>consumer-movie-feign</module>
+        <module>consumer-movie-feign-manual</module>
+        <module>user-provider-custom-security</module>
     </modules>
 
 </project>

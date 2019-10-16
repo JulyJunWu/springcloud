@@ -1,22 +1,17 @@
-
+spring:
+  application:
+    name: eureka-ha
 
 server:
   port: 8761
+
 eureka:
   client:
-    #表示是否将自己注册到Eureka Server,默认为true。由于当前应用就是Eureka Server,故而设为false
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+      #default-zone: http://peer2:8762/eureka,http://admin:admin@peer1:8761/eureka
     register-with-eureka: false
-    #表示是否从Eureka Server获取注册信息，默认为true。因为这是一个单点的Eureka Server,不需要同步其他的Eureka Server节点的数据，故而设为false
     fetch-registry: false
-  service-url:
-    ##设置与EurekaServer交互的地址，查询服务和注册服务都需要依赖这个地址。默认是http://localhost:8761/eureka多个地址可使用，分隔
-    default-zone: http://zws-one:${server.port}/eureka/
-#security:
-#  user:
-#    name: admin
-#    password: admin
-#  basic:
-#    enabled: true
-
-
+  instance:
+    hostname: zws-one
 
