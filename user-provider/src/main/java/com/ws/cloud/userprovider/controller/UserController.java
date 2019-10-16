@@ -16,22 +16,11 @@ import java.util.concurrent.TimeUnit;
 @RestController
 public class UserController {
 
-
     @Autowired
     private UserRepository userRepository;
 
-
     @GetMapping("/user/{id}")
     public User findById(@PathVariable Long id) {
-
-        try {
-
-            TimeUnit.SECONDS.sleep(10);
-        } catch (Exception e) {
-
-        }
-
-
         return userRepository.findOne(id);
     }
 

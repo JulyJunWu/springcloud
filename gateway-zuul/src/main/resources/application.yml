@@ -1,0 +1,37 @@
+server:
+  port: 8100
+
+spring:
+  application:
+    name: microservice-gateway-zuul
+
+eureka:
+  client:
+    service-url:
+      default-zone: http://localhost:8761/eureka/
+
+zuul:
+  #忽略头部,不需要进行传播的头部
+  ignored-headers: header1,header2
+  #全局敏感header , 默认是 Cookie,Set-Cookie,Authorization
+  #需要注意的是，如果使用zuul.routes.*.sensitive-headers的配置方式，会覆盖掉全局的配置。
+  sensitive-headers: Cookie,Set-Cookie,Authorization
+  routes:
+    #自定义微服务访问路径,格式:微服务serviceId=路径,如下microservice-user-provider微服务就会被映射到/user/**
+    #microservice-consumer-movie: /movie/** 或者下面一种方式
+    microservice-consumer-movie:
+      path: /movie/**
+      #为microservice-consumer-movie:微服务设置敏感header(应该是需要进行传播到目标微服务中的头部)
+      sensitive-headers: Cookie,Set-Cookie,Authorization
+      url: https://downstream
+
+  #忽略指定微服务,多个用逗号隔开,使用 '*' 可以忽略所有服务
+  #ignored-services: microservice-user-provider
+  ignored-services: '*'
+  #忽略某些路径
+  ignored-patterns: /**/admin/**
+
+
+logging:
+  level:
+    com.netflix: DEBUG
