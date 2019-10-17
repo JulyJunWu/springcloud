@@ -23,7 +23,7 @@ zuul:
       path: /movie/**
       #为microservice-consumer-movie:微服务设置敏感header(应该是需要进行传播到目标微服务中的头部)
       sensitive-headers: Cookie,Set-Cookie,Authorization
-      url: https://downstream
+      #url: https://downstream
 
   #忽略指定微服务,多个用逗号隔开,使用 '*' 可以忽略所有服务
   #ignored-services: microservice-user-provider
