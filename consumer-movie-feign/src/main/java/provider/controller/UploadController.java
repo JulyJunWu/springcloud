@@ -22,7 +22,7 @@ public class UploadController {
      *  在linux上使用 curl -F "file=@文件名" http://localhost:8082/upload
      */
     @PostMapping("/upload")
-    public String upload(@RequestParam(value = "file",required = true) MultipartFile file)throws IOException{
+    public String upload(@RequestParam(value = "file") MultipartFile file)throws IOException{
 
         byte[] bytes = file.getBytes();
         String originalFilename = file.getOriginalFilename();
