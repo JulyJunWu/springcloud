@@ -19,6 +19,7 @@
         <module>user-provider-custom-security</module>
         <module>hystrix-dashboard</module>
         <module>gateway-zuul</module>
+        <module>hello-spring-boot-starter</module>
     </modules>
 
 </project>
