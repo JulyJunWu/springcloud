@@ -1,6 +1,7 @@
 package provider.entity;
 
 import lombok.Data;
+import provider.validata.ValidateString;
 
 import java.math.BigDecimal;
 
@@ -14,6 +15,7 @@ public class User {
 
     private Long id;
 
+    @ValidateString
     private String username;
 
     private String name;
