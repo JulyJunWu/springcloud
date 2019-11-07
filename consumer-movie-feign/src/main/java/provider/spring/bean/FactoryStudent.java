@@ -12,4 +12,13 @@ public class FactoryStudent {
         return student;
     }
 
+    /**
+     * 非静态创建
+     */
+    public Student createInstance(){
+        Student student = new Student();
+        student.setAge(99);
+        return student;
+    }
+
 }

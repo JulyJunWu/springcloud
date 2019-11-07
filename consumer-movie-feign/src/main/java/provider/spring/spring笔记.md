@@ -28,3 +28,16 @@ AbstractAutowireCapableBeanFactory:
         FactoryBeanRegistrySupport.factoryBeanObjectCache缓存中获取并返回,流程结束!
         
 BeanDefinitionParserDelegate.parseBeanDefinitionAttributes : 解析xml配置的各个bean的属性,如id,singleton,name等
+
+工厂创建bean的三种方式:    
+    1.实现FactoryBean接口的形式,通过getObject获取真实bean对象
+         <bean id="student" class="provider.spring.bean.StudentFactory"></bean>
+         StudentFactory对象实现了FactoryBean接口
+    2.使用静态工厂方式创建
+        <bean id="factoryStudent" class="provider.spring.bean.FactoryStudent" factory-method="create">
+        create方法必须是静态方法
+    3.使用factory-bean + factory-method实现
+         <bean id="base" class="provider.spring.bean.FactoryStudent"></bean>
+         <bean id="testFactoryBean" factory-bean="base" factory-method="createInstance"></bean>
+         注意: createInstance必须是实例方法
+      

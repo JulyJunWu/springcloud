@@ -35,7 +35,7 @@ public class TestMain {
         Student student3 = (Student) xmlBeanFactory.getBean("student2");
         //  获取FactoryBean对象
         StudentFactory studentFactory = (StudentFactory) xmlBeanFactory.getBean("&student");
-        register2(xmlBeanFactory);
+        register3(xmlBeanFactory);
     }
 
     /**
@@ -84,6 +84,33 @@ public class TestMain {
         Student people = (Student) beanFactory.getBean("factoryStudent");
 
         System.out.println(people.getAge());
+    }
+
+    /**
+     * 使用 BeanDefinition 注册
+     *  factoryBean 配合factoryMethod使用
+     *  相当于如下:
+     *      <bean id="base" class="provider.spring.bean.FactoryStudent"></bean>
+     *      <bean id="testFactoryBean" factory-bean="base" factory-method="createInstance"></bean>
+     *       注意: createInstance必须是实例方法
+     */
+    public static void register3(XmlBeanFactory xmlBeanFactory){
+        GenericBeanDefinition definition = new GenericBeanDefinition();
+        definition.setBeanClassName(FactoryStudent.class.getName());
+        //  前提需要的bean对象
+        xmlBeanFactory.registerBeanDefinition("base",definition);
+
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        //  指定factoryMethod , 实例方法
+        beanDefinition.setFactoryMethodName("createInstance");
+        //  指定factory-bean
+        beanDefinition.setFactoryBeanName("base");
+        //  注册
+        xmlBeanFactory.registerBeanDefinition("testFactoryBean",beanDefinition);
+
+        Student bean = (Student) xmlBeanFactory.getBean("testFactoryBean");
+        System.out.println(bean.getAge());
+
     }
 
 
