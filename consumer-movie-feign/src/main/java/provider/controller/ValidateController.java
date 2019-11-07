@@ -19,4 +19,14 @@ public class ValidateController {
         return user;
     }
 
+    @GetMapping("/hello")
+    public User hello(User user){
+        return user;
+    }
+
+    @GetMapping("/test")
+    public String hello(String username){
+        return username;
+    }
+
 }
