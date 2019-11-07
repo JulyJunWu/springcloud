@@ -4,6 +4,7 @@ DefaultSingletonBeanRegistry : 主要是用来保存singleton的信息,如 实�
     Map<String, Object> singletonObjects: 存放实例化完毕的singleton实例
     Set<String> singletonsCurrentlyInCreation: 存档正在创建的bean的名称
     Set<String> registeredSingletons: 存放已注册的实例名称
+    Map<String, BeanDefinition> beanDefinitionMap;
 AbstractBeanFactory:    
     Set<String> alreadyCreated  : 存放已创建的bean名称
 FactoryBeanRegistrySupport: 存放实现FactoryBean接口的bean , 而FactoryBean实现类则是保存在DefaultSingletonBeanRegistry的singletonObjects变量中
@@ -26,4 +27,4 @@ AbstractAutowireCapableBeanFactory:
         4.由于获取的对象(StudentFactory)实现了FactoryBean接口,并且name并非以"&"前缀开头,所以真正的name实例从
         FactoryBeanRegistrySupport.factoryBeanObjectCache缓存中获取并返回,流程结束!
         
-    
+BeanDefinitionParserDelegate.parseBeanDefinitionAttributes : 解析xml配置的各个bean的属性,如id,singleton,name等

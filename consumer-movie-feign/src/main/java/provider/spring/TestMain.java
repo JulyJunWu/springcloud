@@ -4,7 +4,7 @@ import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.core.io.ClassPathResource;
-import provider.spring.bean.People;
+import provider.spring.bean.FactoryStudent;
 import provider.spring.bean.Student;
 import provider.spring.bean.StudentFactory;
 import provider.spring.bean.User;
@@ -29,15 +29,13 @@ public class TestMain {
         User user = xmlBeanFactory.getBean(User.class);
         user.sleep();
 
-        People people = user.getPeople();
-
         Student student = xmlBeanFactory.getBean(Student.class);
 
         Student student2 = (Student) xmlBeanFactory.getBean("student");
-        System.out.println(student2);
-
+        Student student3 = (Student) xmlBeanFactory.getBean("student2");
+        //  获取FactoryBean对象
         StudentFactory studentFactory = (StudentFactory) xmlBeanFactory.getBean("&student");
-        System.out.println(studentFactory.isSingleton());
+        register2(xmlBeanFactory);
     }
 
     /**
@@ -45,6 +43,7 @@ public class TestMain {
      * @param xmlBeanFactory
      */
     public static void register(XmlBeanFactory xmlBeanFactory) {
+        //  xml解析底层也是使用这个GenericBeanDefinition类装载bean的各个属性
         GenericBeanDefinition definition = new GenericBeanDefinition();
         definition.setBeanClass(TestMain.class);
         definition.setBeanClassName(TestMain.class.getName());
@@ -65,6 +64,26 @@ public class TestMain {
         System.out.println(user.getName());
         //  xmlBeanFactory.destroyBean(areaNode);
         xmlBeanFactory.destroySingleton("testUser");
+    }
+
+    /**
+     * 自定义使用BeanDefinition 注册静态工厂创建bean
+     * 注意: factoryMethod 必须是静态的
+     * 此方式注册bean就相当于 <bean id="factoryStudent" class="provider.spring.bean.FactoryStudent" factory-method="create">
+     * @param beanFactory
+     */
+    public static void register2(XmlBeanFactory beanFactory){
+
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        beanDefinition.setBeanClassName(FactoryStudent.class.getName());
+        //  create是静态方法
+        beanDefinition.setFactoryMethodName("create");
+
+        beanFactory.registerBeanDefinition("factoryStudent",beanDefinition);
+
+        Student people = (Student) beanFactory.getBean("factoryStudent");
+
+        System.out.println(people.getAge());
     }
 
 

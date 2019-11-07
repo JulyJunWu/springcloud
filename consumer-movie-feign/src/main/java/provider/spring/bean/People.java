@@ -33,4 +33,12 @@ public class People implements BeanNameAware {
     public void setBeanName(String s) {
         this.name = s;
     }
+
+    public void initMethod(){
+        log.info(this.getClass().getName() + " init");
+    }
+
+    public void destroyMethod(){
+        log.info(this.getClass().getName() + " destroy!");
+    }
 }
