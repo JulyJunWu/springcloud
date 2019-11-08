@@ -1,48 +1,47 @@
 package provider.spring;
 
+import org.junit.Before;
+import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
+import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
-import provider.spring.bean.FactoryStudent;
-import provider.spring.bean.Student;
-import provider.spring.bean.StudentFactory;
-import provider.spring.bean.User;
+import provider.spring.bean.*;
 
 /**
  * @author JunWu
- *
- *  XmlBeanFactory:               是按需加载
- *  ClassPathApplicationContext : 是一次性singleton加载
- *
+ * <p>
+ * XmlBeanFactory:               是按需加载
+ * ClassPathApplicationContext : 是一次性singleton加载
  */
 public class TestMain {
 
+    public static DefaultListableBeanFactory beanFactory;
 
-    public static void main(String[] args) throws Exception {
+    @Before
+    public void prepare() throws Exception {
         //  使用classpath下路径
-        ClassPathResource resource = new ClassPathResource("test/hello.xml");
+        ClassPathResource resource = new ClassPathResource("test/application.xml");
         // 使用绝对路径
-        //FileSystemResource systemResource = new FileSystemResource("D:\\workspace\\govdatamidground\\govdatamidground-micro\\target\\classes\\hello.xml");
-        XmlBeanFactory xmlBeanFactory = new XmlBeanFactory(resource);
+        //FileSystemResource systemResource = new FileSystemResource("D:\\workspace\\govdatamidground\\govdatamidground-micro\\target\\classes\\application.xml");
+        beanFactory = new XmlBeanFactory(resource);
 
-        User user = xmlBeanFactory.getBean(User.class);
-        user.sleep();
-
-        Student student = xmlBeanFactory.getBean(Student.class);
-
-        Student student2 = (Student) xmlBeanFactory.getBean("student");
-        Student student3 = (Student) xmlBeanFactory.getBean("student2");
+        Student student = beanFactory.getBean(Student.class);
+        Student student2 = (Student) beanFactory.getBean("student");
+        Student student3 = (Student) beanFactory.getBean("student2");
         //  获取FactoryBean对象
-        StudentFactory studentFactory = (StudentFactory) xmlBeanFactory.getBean("&student");
-        register3(xmlBeanFactory);
+        StudentFactory studentFactory = (StudentFactory) beanFactory.getBean("&student");
     }
 
     /**
-     *  手动注册bean
-     * @param xmlBeanFactory
+     * 手动注册bean
      */
-    public static void register(XmlBeanFactory xmlBeanFactory) {
+    @Test
+    public void register() {
         //  xml解析底层也是使用这个GenericBeanDefinition类装载bean的各个属性
         GenericBeanDefinition definition = new GenericBeanDefinition();
         definition.setBeanClass(TestMain.class);
@@ -58,28 +57,27 @@ public class TestMain {
         //  设置为主bean
         definition.setPrimary(true);
         //  注册bean, 指定bean的名称
-        xmlBeanFactory.registerBeanDefinition("testUser", definition);
+        beanFactory.registerBeanDefinition("testUser", definition);
 
-        User user = xmlBeanFactory.getBean("testUser", User.class);
+        User user = beanFactory.getBean("testUser", User.class);
         System.out.println(user.getName());
-        //  xmlBeanFactory.destroyBean(areaNode);
-        xmlBeanFactory.destroySingleton("testUser");
+        //  beanFactory.destroyBean(areaNode);
+        beanFactory.destroySingleton("testUser");
     }
 
     /**
      * 自定义使用BeanDefinition 注册静态工厂创建bean
      * 注意: factoryMethod 必须是静态的
      * 此方式注册bean就相当于 <bean id="factoryStudent" class="provider.spring.bean.FactoryStudent" factory-method="create">
-     * @param beanFactory
      */
-    public static void register2(XmlBeanFactory beanFactory){
-
+    @Test
+    public void register2() {
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClassName(FactoryStudent.class.getName());
         //  create是静态方法
         beanDefinition.setFactoryMethodName("create");
 
-        beanFactory.registerBeanDefinition("factoryStudent",beanDefinition);
+        beanFactory.registerBeanDefinition("factoryStudent", beanDefinition);
 
         Student people = (Student) beanFactory.getBean("factoryStudent");
 
@@ -88,17 +86,18 @@ public class TestMain {
 
     /**
      * 使用 BeanDefinition 注册
-     *  factoryBean 配合factoryMethod使用
-     *  相当于如下:
-     *      <bean id="base" class="provider.spring.bean.FactoryStudent"></bean>
-     *      <bean id="testFactoryBean" factory-bean="base" factory-method="createInstance"></bean>
-     *       注意: createInstance必须是实例方法
+     * factoryBean 配合factoryMethod使用
+     * 相当于如下:
+     * <bean id="base" class="provider.spring.bean.FactoryStudent"></bean>
+     * <bean id="testFactoryBean" factory-bean="base" factory-method="createInstance"></bean>
+     * 注意: createInstance必须是实例方法
      */
-    public static void register3(XmlBeanFactory xmlBeanFactory){
+    @Test
+    public void register3() {
         GenericBeanDefinition definition = new GenericBeanDefinition();
         definition.setBeanClassName(FactoryStudent.class.getName());
         //  前提需要的bean对象
-        xmlBeanFactory.registerBeanDefinition("base",definition);
+        beanFactory.registerBeanDefinition("base", definition);
 
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         //  指定factoryMethod , 实例方法
@@ -106,12 +105,59 @@ public class TestMain {
         //  指定factory-bean
         beanDefinition.setFactoryBeanName("base");
         //  注册
-        xmlBeanFactory.registerBeanDefinition("testFactoryBean",beanDefinition);
+        beanFactory.registerBeanDefinition("testFactoryBean", beanDefinition);
 
-        Student bean = (Student) xmlBeanFactory.getBean("testFactoryBean");
+        Student bean = (Student) beanFactory.getBean("testFactoryBean");
         System.out.println(bean.getAge());
-
     }
 
+    /**
+     * 使用 RootBeanDefinition 注册
+     */
+    @Test
+    public void register4() {
+        RootBeanDefinition rootBeanDefinition = new RootBeanDefinition(TestMain.class);
+        beanFactory.registerBeanDefinition("Hello", rootBeanDefinition);
+        Object hello = beanFactory.getBean("Hello");
+    }
+
+    /**
+     * lookupMethod 获取器注入
+     */
+    @Test
+    public void register5() {
+        beanFactory.getBean("lookupTeacher");
+        AbstractLookupBean lookupBean = (AbstractLookupBean) beanFactory.getBean("lookupBean");
+        lookupBean.show();
+    }
+
+    /**
+     * 使用ClassPathXmlApplicationContext创建 beanFactory
+     */
+    @Test
+    public void newInstance() {
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/application.xml");
+        Object lookupTeacher = applicationContext.getBean("lookupTeacher");
+        System.out.println(applicationContext);
+    }
+
+
+    /**
+     * replaced-method
+     */
+    @Test
+    public void replacedMethod() {
+        ReplaceMethodBean bean = beanFactory.getBean(ReplaceMethodBean.class);
+        bean.dance();
+    }
+
+    /**
+     * 有参构造器注入
+     */
+    @Test
+    public void test() {
+        Student student = (Student) beanFactory.getBean("constructorStudent");
+        System.out.println(student.getAge());
+    }
 
 }

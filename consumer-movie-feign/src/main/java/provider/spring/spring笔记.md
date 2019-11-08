@@ -40,4 +40,12 @@ BeanDefinitionParserDelegate.parseBeanDefinitionAttributes : 解析xml配置的�
          <bean id="base" class="provider.spring.bean.FactoryStudent"></bean>
          <bean id="testFactoryBean" factory-bean="base" factory-method="createInstance"></bean>
          注意: createInstance必须是实例方法
-      
+
+spring默认标签:
+    import , bean , beans , alias ,其他的都是自定义标签 , 自定义标签需要提供自定义的解析流程
+    import : 此标签主要用于导入其他spring配置
+    bean : 定义一个实例交给IOC
+    beans: 主要是方便生产/开发环境,就是一个profile , 可以自由切换
+    alias: 可以为bean取多个别名(效果等同于bean标签中的name属性)
+
+获取器注入: lookup-method      
