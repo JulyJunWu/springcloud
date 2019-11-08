@@ -4,6 +4,8 @@ import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
 import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.factory.config.ConstructorArgumentValues;
+import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
 import org.springframework.beans.factory.support.RootBeanDefinition;
@@ -153,11 +155,29 @@ public class TestMain {
 
     /**
      * 有参构造器注入
+     *
+     * 手动代码注册有参构造器
      */
     @Test
     public void test() {
         Student student = (Student) beanFactory.getBean("constructorStudent");
         System.out.println(student.getAge());
-    }
 
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        beanDefinition.setBeanClassName(Student.class.getName());
+
+        ConstructorArgumentValues value = new ConstructorArgumentValues();
+        // 构造参数值
+        TypedStringValue stringValue = new TypedStringValue("88");
+        ConstructorArgumentValues.ValueHolder newValue = new ConstructorArgumentValues.ValueHolder(stringValue);
+        // 构造参数名称
+        newValue.setName("age");
+        value.addGenericArgumentValue(newValue);
+        beanDefinition.setConstructorArgumentValues(value);
+
+        beanFactory.registerBeanDefinition("manualStudent",beanDefinition);
+
+        Student manualStudent = (Student) beanFactory.getBean("manualStudent");
+        System.out.println(manualStudent);
+    }
 }
