@@ -1,17 +1,21 @@
 package provider.spring;
 
+import lombok.extern.slf4j.Slf4j;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.beans.MutablePropertyValues;
-import org.springframework.beans.factory.BeanFactory;
+import org.springframework.beans.PropertyValue;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.beans.factory.config.ConstructorArgumentValues;
 import org.springframework.beans.factory.config.TypedStringValue;
 import org.springframework.beans.factory.support.DefaultListableBeanFactory;
 import org.springframework.beans.factory.support.GenericBeanDefinition;
+import org.springframework.beans.factory.support.ManagedMap;
 import org.springframework.beans.factory.support.RootBeanDefinition;
 import org.springframework.beans.factory.xml.XmlBeanFactory;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
+import org.w3c.dom.Element;
 import provider.spring.bean.*;
 
 /**
@@ -20,6 +24,7 @@ import provider.spring.bean.*;
  * XmlBeanFactory:               是按需加载
  * ClassPathApplicationContext : 是一次性singleton加载
  */
+@Slf4j
 public class TestMain {
 
     public static DefaultListableBeanFactory beanFactory;
@@ -70,7 +75,8 @@ public class TestMain {
     /**
      * 自定义使用BeanDefinition 注册静态工厂创建bean
      * 注意: factoryMethod 必须是静态的
-     * 此方式注册bean就相当于 <bean id="factoryStudent" class="provider.spring.bean.FactoryStudent" factory-method="create">
+     * 此方式注册bean就相当于
+     * <bean id="factoryStudent" class="provider.spring.bean.FactoryStudent" factory-method="create">
      */
     @Test
     public void register2() {
@@ -155,8 +161,15 @@ public class TestMain {
 
     /**
      * 有参构造器注入
-     *
      * 手动代码注册有参构造器((通过参数名称注入)
+     *
+     * <bean id="constructorInjectionByIndex" class="provider.spring.bean.Student">
+     *      <constructor-arg name="age" value="66"></constructor-arg>
+     * </bean>
+     *
+     * <bean id="constructorInjectionByIndex" class="provider.spring.bean.Student">
+     *      <constructor-arg type="int" value="66"></constructor-arg>
+     * </bean>
      */
     @Test
     public void constructorInjectionByName() {
@@ -177,7 +190,7 @@ public class TestMain {
         value.addGenericArgumentValue(newValue);
         beanDefinition.setConstructorArgumentValues(value);
 
-        beanFactory.registerBeanDefinition("manualStudent",beanDefinition);
+        beanFactory.registerBeanDefinition("manualStudent", beanDefinition);
 
         Student manualStudent = (Student) beanFactory.getBean("manualStudent");
         System.out.println(manualStudent);
@@ -185,9 +198,12 @@ public class TestMain {
 
     /**
      * 通过指定索引 构造器注入
+     * <bean id="constructorInjectionByIndex" class="provider.spring.bean.Student">
+     *      <constructor-arg index="0" value="66"></constructor-arg>
+     * </bean>
      */
     @Test
-    public void constructorInjectionByIndex(){
+    public void constructorInjectionByIndex() {
         GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
         beanDefinition.setBeanClassName(Student.class.getName());
 
@@ -195,13 +211,79 @@ public class TestMain {
         TypedStringValue stringValue = new TypedStringValue("66");
         ConstructorArgumentValues.ValueHolder holder = new ConstructorArgumentValues.ValueHolder(stringValue);
         //  指定索引以及ValueHolder
-        argumentValues.addIndexedArgumentValue(0,holder);
+        argumentValues.addIndexedArgumentValue(0, holder);
         //  关联到BeanDefinition
         beanDefinition.setConstructorArgumentValues(argumentValues);
 
-        beanFactory.registerBeanDefinition("constructorInjectionByIndex",beanDefinition);
+        beanFactory.registerBeanDefinition("constructorInjectionByIndex", beanDefinition);
 
         Student byIndex = beanFactory.getBean("constructorInjectionByIndex", Student.class);
         System.out.println(byIndex.getAge());
+    }
+
+
+    /**
+     * 手动代码注册 实例属性注入
+     * 相当于如下:
+     * <bean id="manualInjectionProperty" class="provider.spring.bean.User">
+     *      <property name="name" value="ws"></property>
+     * </bean>
+     */
+    @Test
+    public void manualInjectionProperty() {
+
+        GenericBeanDefinition definition = new GenericBeanDefinition();
+        definition.setBeanClassName(User.class.getName());
+
+        //  构造存储Property属性的集合
+        MutablePropertyValues propertyList = new MutablePropertyValues();
+        PropertyValue propertyValue = new PropertyValue("name", "ws");
+        propertyList.addPropertyValue(propertyValue);
+        //  设置属性集合
+        definition.setPropertyValues(propertyList);
+
+        beanFactory.registerBeanDefinition("manualInjectionProperty", definition);
+
+        User manualInjectionProperty = beanFactory.getBean("manualInjectionProperty", User.class);
+        System.out.println(manualInjectionProperty.getName());
+    }
+
+    /**
+     * 构造器参数为Map类型 注入
+     * 等同于如下:
+     * <bean id="constructorInjectionByMap" class="provider.spring.bean.Human">
+     *     <constructor-arg name="map">
+     *         <map>
+     *             <entry key="name" value="ws"></entry>
+     *             <entry key="age" value="8866"></entry>
+     *         </map>
+     *     </constructor-arg>
+     * </bean>
+     *
+     * 详情解析代码请看(包括解析list/map/array/set/props等等)
+     * @see org.springframework.beans.factory.xml.BeanDefinitionParserDelegate#parsePropertySubElement(Element, BeanDefinition, String)
+     */
+    @Test
+    public void constructorInjectionByMap() {
+
+        GenericBeanDefinition definition = new GenericBeanDefinition();
+        definition.setBeanClassName(Human.class.getName());
+
+        ConstructorArgumentValues constructorArgumentValues = new ConstructorArgumentValues();
+        //  存放map属性kv
+        ManagedMap<Object, Object> params = new ManagedMap<>();
+        params.put("name", "ws");
+        params.put("age", "19");
+        ConstructorArgumentValues.ValueHolder valueHolder = new ConstructorArgumentValues.ValueHolder(params);
+        valueHolder.setName("map");
+        constructorArgumentValues.addGenericArgumentValue(valueHolder);
+
+        definition.setConstructorArgumentValues(constructorArgumentValues);
+
+        beanFactory.registerBeanDefinition("constructorInjectionByMap", definition);
+
+        Human human = beanFactory.getBean("constructorInjectionByMap", Human.class);
+
+        log.info("{}",human.getMap().size());
     }
 }
