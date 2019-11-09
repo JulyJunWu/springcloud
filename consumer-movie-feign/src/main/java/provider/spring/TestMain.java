@@ -156,10 +156,10 @@ public class TestMain {
     /**
      * 有参构造器注入
      *
-     * 手动代码注册有参构造器
+     * 手动代码注册有参构造器((通过参数名称注入)
      */
     @Test
-    public void test() {
+    public void constructorInjectionByName() {
         Student student = (Student) beanFactory.getBean("constructorStudent");
         System.out.println(student.getAge());
 
@@ -170,8 +170,10 @@ public class TestMain {
         // 构造参数值
         TypedStringValue stringValue = new TypedStringValue("88");
         ConstructorArgumentValues.ValueHolder newValue = new ConstructorArgumentValues.ValueHolder(stringValue);
-        // 构造参数名称
-        newValue.setName("age");
+        // 通过参数名称注入
+        //  newValue.setName("age");
+        // 通过参数类型注入
+        newValue.setType("int");
         value.addGenericArgumentValue(newValue);
         beanDefinition.setConstructorArgumentValues(value);
 
@@ -179,5 +181,27 @@ public class TestMain {
 
         Student manualStudent = (Student) beanFactory.getBean("manualStudent");
         System.out.println(manualStudent);
+    }
+
+    /**
+     * 通过指定索引 构造器注入
+     */
+    @Test
+    public void constructorInjectionByIndex(){
+        GenericBeanDefinition beanDefinition = new GenericBeanDefinition();
+        beanDefinition.setBeanClassName(Student.class.getName());
+
+        ConstructorArgumentValues argumentValues = new ConstructorArgumentValues();
+        TypedStringValue stringValue = new TypedStringValue("66");
+        ConstructorArgumentValues.ValueHolder holder = new ConstructorArgumentValues.ValueHolder(stringValue);
+        //  指定索引以及ValueHolder
+        argumentValues.addIndexedArgumentValue(0,holder);
+        //  关联到BeanDefinition
+        beanDefinition.setConstructorArgumentValues(argumentValues);
+
+        beanFactory.registerBeanDefinition("constructorInjectionByIndex",beanDefinition);
+
+        Student byIndex = beanFactory.getBean("constructorInjectionByIndex", Student.class);
+        System.out.println(byIndex.getAge());
     }
 }
