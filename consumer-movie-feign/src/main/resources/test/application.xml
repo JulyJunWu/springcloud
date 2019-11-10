@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
-       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:util="http://www.springframework.org/schema/util"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd">
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 
     <bean id="user" name="user2" class="provider.spring.bean.User">
@@ -24,12 +24,13 @@
             getBean("student")
             效果都是一样的
     -->
-    <bean id="student" name="student2,student3 student4;s" class="provider.spring.bean.StudentFactory" primary="true"></bean>
+    <bean id="student" name="student2,student3 student4;s" class="provider.spring.bean.StudentFactory" primary="true">
+    </bean>
 
     <!--获取器注入 lookup-method-->
     <bean id="lookupBean" class="provider.spring.bean.AbstractLookupBean">
         <!--name: 需要重写或者实现的方法   bean: 实现的bean,可以随时替换,只要是getBean的返回类型的实现类-->
-        <lookup-method name="getBean" bean="lookupTeacher" />
+        <lookup-method name="getBean" bean="lookupTeacher"/>
     </bean>
 
     <bean id="lookupHuman" class="provider.spring.bean.LookupHuman"></bean>
@@ -48,12 +49,25 @@
         <constructor-arg name="age" value="19"></constructor-arg>
     </bean>
 
-    <bean id="human" class="provider.spring.bean.Human">
+    <!--
+        autowire-candidate : 属性设置为false,这样容器在查找自动装配对象时，将不考虑该bean,即它不会被考虑作为其他bean自动装配的候选者，
+        但是该bean本身还是可以使用自动装配来注入其他bean的;
+
+        depends-on: 用来表示个bean的实例化依靠另一个bean先实例化,对应bean属性depend-on;
+    -->
+    <bean id="human" class="provider.spring.bean.Human" autowire-candidate="false" depends-on="people">
         <constructor-arg name="map">
             <map>
                 <entry key="name" value="Six"></entry>
             </map>
         </constructor-arg>
+        <property name="list">
+            <list>
+                <value>8888</value>
+                <value>6666</value>
+                <value>7777</value>
+            </list>
+        </property>
     </bean>
 
 </beans>

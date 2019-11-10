@@ -1,23 +1,19 @@
 package provider.spring.bean;
 
+import lombok.Data;
+
 /**
  * @author JunWu
  */
+@Data
 public class Student {
 
-    private int age ;
+    private int age;
 
-    public int getAge() {
-        return age;
+    public Student() {
     }
 
-    public void setAge(int age) {
-        this.age = age;
-    }
-
-    public Student(){}
-
-    public Student(int age){
+    public Student(int age) {
         this.age = age;
     }
 }

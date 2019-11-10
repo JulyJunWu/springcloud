@@ -1,11 +1,14 @@
 package provider.spring.bean;
 
+import lombok.Data;
+
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author JunWu
  */
+@Data
 public class Human {
 
     private List list;
@@ -15,19 +18,7 @@ public class Human {
         this.map = map;
     }
 
-    public List getList() {
-        return list;
-    }
-
-    public void setList(List list) {
+    public Human(List list) {
         this.list = list;
-    }
-
-    public Map getMap() {
-        return map;
-    }
-
-    public void setMap(Map map) {
-        this.map = map;
     }
 }

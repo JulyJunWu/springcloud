@@ -17,6 +17,7 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Element;
 import provider.spring.bean.*;
+import provider.spring.bean.customtag.Coder;
 
 /**
  * @author JunWu
@@ -285,5 +286,24 @@ public class TestMain {
         Human human = beanFactory.getBean("constructorInjectionByMap", Human.class);
 
         log.info("{}",human.getMap().size());
+
+        human = beanFactory.getBean("human", Human.class);
+
+        log.info("{}",human.getList().size());
+    }
+
+    @Test
+    public void testDependOn(){
+        Object bean = beanFactory.getBean("human");
+    }
+
+    /**
+     * 测试spring自定义标签
+     */
+    @Test
+    public void customTag(){
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/customTag.xml");
+        Coder coder = applicationContext.getBean("customTagBean",Coder.class);
+        log.info("{}",coder);
     }
 }

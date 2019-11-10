@@ -1,0 +1,2 @@
+#指定xsd的路径
+http\://www.ws.com/schema/coder.xsd=META-INF/coder.xsd
