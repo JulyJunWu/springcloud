@@ -2,7 +2,7 @@ DefaultSingletonBeanRegistry : 主要是用来保存singleton的信息,如 实�
     函数registerDisposableBean: 注册指定了销毁方法的实例 或者 实现了DisposableBean接口
     Map<String, Object> disposableBeans : 存放拥有销毁方法的singleton实例
     Map<String, Object> singletonObjects: 存放实例化完毕的singleton实例
-    Set<String> singletonsCurrentlyInCreation: 存档正在创建的bean的名称
+    Set<String> singletonsCurrentlyInCreation: 存放正在创建的bean的名称
     Set<String> registeredSingletons: 存放已注册的实例名称
     Map<String, BeanDefinition> beanDefinitionMap;
     
@@ -78,7 +78,33 @@ spring默认标签:
     private boolean synthetic = false; 
 
 spring解析自定义标签:
+    1.创建一个需要扩展的组件.
+    2.定义一个XSD文件描述组件内容。
+    3.创建一个文件，实现BeanDefinitionParser接口，用来解析XSD文件中的定义和组件定义。
+    4.创建一个Handler文件，扩展自NamespaceHandlerSupport,目的是将组件注册到Spring容器。
+    5.编写Spring.handlers和Spring.schemas文件。默认位置是在工程的META-INF/文件夹下
     
+创建bean的主要实现代码:    
+    AbstractAutowireCapableBeanFactory.createBean(String, RootBeanDefinition, Object[])
+    AbstractAutowireCapableBeanFactory.doCreateBean : 创建包装bean,并进行属性注入,以及进行bean的生命周期方法,如initMethod,以及spring的接口,如InitializingBean等等,各种*Aware
+        主要函数:   addSingletonFactory : 主要是解决循环依赖提前暴露
+                    populateBean  : 属性的注入
+                    initializeBean : bean的生命周期开始
+                    registerDisposableBeanIfNecessary: 注册销毁方法
+
+循环依赖:在Spring中将循环依赖的处理分成了3种情况。
+     1.构造器循环依赖
+     表示通过构造器注人构成的循环依赖，此依赖是无法解决的，只能抛出BeanCurrentlyInCreationException异常表示循环依赖。
+     2. setter 循环依赖
+     表示通过setter注人方式构成的循环依赖。对于setter注人造成的依赖是通过Spring容器提前暴露刚完成构造器注人但未完成其他
+     步骤(如setter注人)的bean来完成的，而且只能解决单例作用域的bean循环依赖。通过提前暴露一个单例工厂 方法，从而使其他
+     bean能引用到;
+     3. prototype 范围的依赖处理
+     对于“prototype"作用域bean, Spring 容器无法完成依赖注人，因为Spring容器不进行缓存“prototype" 作用域的bean,因此无法
+     提前暴露一个创建中的bean。
+
+
+
 
 
 

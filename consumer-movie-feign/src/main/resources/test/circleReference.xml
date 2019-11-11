@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--循环引用-->
+    <bean id="circleA" class="provider.spring.bean.circle.CircleA">
+        <property name="circleB" ref="circleB"></property>
+    </bean>
+
+    <bean id="circleB" class="provider.spring.bean.circle.CircleB">
+        <property name="circleC" ref="circleC"></property>
+    </bean>
+
+    <bean id="circleC" class="provider.spring.bean.circle.CircleC">
+        <property name="circleA" ref="circleA"></property>
+    </bean>
+
+</beans>
