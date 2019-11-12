@@ -36,11 +36,12 @@ public class MyCustomEditorConfigurer extends CustomEditorConfigurer {
     @Override
     public void postProcessBeanFactory(ConfigurableListableBeanFactory beanFactory) throws BeansException {
         //  register(beanFactory);
-        registerDirect(beanFactory);
+        //  registerDirect(beanFactory);
+        registerByRegistrar(beanFactory);
     }
 
     /**
-     * 原生注册
+     * 方式一 : 原生注册
      * @param beanFactory
      */
     private void register(ConfigurableListableBeanFactory beanFactory){
@@ -51,11 +52,18 @@ public class MyCustomEditorConfigurer extends CustomEditorConfigurer {
     }
 
     /**
-     * 直接注册,无需依靠父类注册
+     * 方式一 : 直接注册,无需依靠父类注册
      * @param beanFactory
      */
     private void registerDirect(ConfigurableListableBeanFactory beanFactory){
         beanFactory.registerCustomEditor(Date.class,DatePropertyEditor.class);
+    }
+
+    /**
+     * 方式二: 通过Registrar进行注册,参考 父类属性 propertyEditorRegistrars
+     */
+    private void registerByRegistrar(ConfigurableListableBeanFactory beanFactory){
+        beanFactory.addPropertyEditorRegistrar(new DatePropertyRegistrar());
     }
 
 }
