@@ -16,4 +16,7 @@
         <property name="circleA" ref="circleA"></property>
     </bean>
 
+
+    <bean class="provider.spring.bean.beanpostprocessor.MyBeanPostProcessor" id="myBeanPostProcessor"></bean>
+
 </beans>

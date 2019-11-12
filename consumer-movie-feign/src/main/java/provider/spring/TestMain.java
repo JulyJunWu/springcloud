@@ -305,5 +305,8 @@ public class TestMain {
         ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/customTag.xml");
         Coder coder = applicationContext.getBean("customTagBean",Coder.class);
         log.info("{}",coder);
+
+        Object bean = beanFactory.getBean("");
+
     }
 }

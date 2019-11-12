@@ -8,6 +8,8 @@ DefaultSingletonBeanRegistry : 主要是用来保存singleton的信息,如 实�
     
 AbstractBeanFactory:    
     Set<String> alreadyCreated  : 存放已创建的bean名称
+    // BeanPostProcessors to apply in createBean
+    private final List<BeanPostProcessor> beanPostProcessors
     
 SimpleAliasRegistry(默认工厂的父类继承了该类): 
     Map<String, String> aliasMap = new ConcurrentHashMap(16); 存放beanName的别名
@@ -103,8 +105,39 @@ spring解析自定义标签:
      对于“prototype"作用域bean, Spring 容器无法完成依赖注人，因为Spring容器不进行缓存“prototype" 作用域的bean,因此无法
      提前暴露一个创建中的bean。
 
-
-
+bean的生命周期:
+    AbstractBeanFactory.getBean(String)
+        AbstractBeanFactory.doGetBean(final String, final Class<T>, final Object[], boolean)
+            DefaultSingletonBeanRegistry.getSingleton(String,ObjectFactory<?>)
+                bstractBeanFactory.createBean(String, RootBeanDefinition, Object[]) ::注意此处其实是singletonFactory.getObject()的过程
+                   // 是否有lookup-method和replace-method,并且验证是否有多个重写函数
+                   mbdToUse.prepareMethodOverrides();
+                   AbstractAutowireCapableBeanFactory.doCreateBean(final String, final RootBeanDefinition, final Object[])
+                       // 创建实例  
+                       BeanWrapper instanceWrapper = createBeanInstance(beanName, mbd, args);
+                       //解决单例循环依赖(属性注入)
+                       DefaultSingletonBeanRegistry.addSingletonFactory(String, ObjectFactory<?>)
+                       //  属性注入
+                       AbstractAutowireCapableBeanFactory.populateBean(String, RootBeanDefinition, BeanWrapper)
+                       //  bean的生命周期开始,spring提供一些接口或函数对实例化完毕bean的操作
+                       AbstractAutowireCapableBeanFactory.initializeBean(String,Object,RootBeanDefinition)
+                            // 执行各种*Aware接口的实现,注入属性
+                           AbstractAutowireCapableBeanFactory.invokeAwareMethods(final String, final Object)
+                           //  执行实现BeanPostProcessor接口的before函数
+                           AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(Object, String)
+                           //  执行InitializingBean接口以及自定义的init-method函数
+                           AbstractAutowireCapableBeanFactory.invokeInitMethods(String , final Object, RootBeanDefinition)
+                               // 执行InitializingBean的afterPropertiesSet函数
+                               ((InitializingBean) bean).afterPropertiesSet();
+                               //  执行initMethod
+                               invokeCustomInitMethod(beanName, bean, mbd);
+                           //  执行BeanPostProcessor接口的after函数
+                           AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsAfterInitialization(Object, String)
+                       //  注册销毁函数(只有单例才会生效)
+                       AbstractBeanFactory.registerDisposableBeanIfNecessary(String , Object, RootBeanDefinition)
+                DefaultSingletonBeanRegistry.addSingleton(String, Object)
+            // 获取真正的bean,如果name是以"&"开头,则获取FactoryBean实例,否则返回原bean
+            AbstractBeanFactory.getObjectForBeanInstance
 
 
 
