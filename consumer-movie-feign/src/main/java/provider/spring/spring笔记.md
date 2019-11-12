@@ -10,6 +10,8 @@ AbstractBeanFactory:
     Set<String> alreadyCreated  : 存放已创建的bean名称
     // BeanPostProcessors to apply in createBean
     private final List<BeanPostProcessor> beanPostProcessors
+    //  存放解析特殊Property属性,比如Date无法进行注入,在此添加属性解析对value解析转换为对应的类型
+    private final Map<Class<?>, Class<? extends PropertyEditor>> customEditors;
     
 SimpleAliasRegistry(默认工厂的父类继承了该类): 
     Map<String, String> aliasMap = new ConcurrentHashMap(16); 存放beanName的别名

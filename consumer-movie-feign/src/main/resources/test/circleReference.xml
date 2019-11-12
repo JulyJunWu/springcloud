@@ -16,7 +16,15 @@
         <property name="circleA" ref="circleA"></property>
     </bean>
 
-
     <bean class="provider.spring.bean.beanpostprocessor.MyBeanPostProcessor" id="myBeanPostProcessor"></bean>
+
+    <!--自定义属性解析-->
+    <bean id="shopRecord" class="provider.spring.bean.custompropertyeditor.ShopRecord">
+        <property name="date" value="2019-10-09"></property>
+    </bean>
+
+    <!--注册属性解析器-->
+    <bean  class="provider.spring.bean.custompropertyeditor.MyCustomEditorConfigurer">
+    </bean>
 
 </beans>
