@@ -153,3 +153,6 @@ ApplicationEventMulticaster的初始化:
 SimpleApplicationEventMulticaster
     存放实现ApplicationListener的beanName以及bean
     AbstractApplicationEventMulticaster.ListenerRetriever defaultRetriever
+
+ConversionService(属性转换服务):
+    之前使用自定义类型转换器(PropertyEditor)从String转换为Date的方式，在Spring中还提供了另一种转换方式:使用Converter;

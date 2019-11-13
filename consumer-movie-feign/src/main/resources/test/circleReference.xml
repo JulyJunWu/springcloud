@@ -27,4 +27,8 @@
     <bean  class="provider.spring.bean.custompropertyeditor.MyCustomEditorConfigurer">
     </bean>
 
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer"></bean>
+
+    <!--自定义监听-->
+    <bean id="customListener" class="provider.spring.bean.listener.CustomListener"></bean>
 </beans>
