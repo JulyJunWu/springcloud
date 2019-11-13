@@ -141,5 +141,15 @@ bean的生命周期:
             // 获取真正的bean,如果name是以"&"开头,则获取FactoryBean实例,否则返回原bean
             AbstractBeanFactory.getObjectForBeanInstance
 
-
-
+ApplicationEventMulticaster的初始化:
+    AbstractApplicationContext.refresh
+        AbstractApplicationContext.initApplicationEventMulticaster:
+            1.如果beanFactory有指定beanName为"applicationEventMulticaster"则直接使用;
+            2.否则使用默认的SimpleApplicationEventMulticaster并注册单例到beanFactory中;
+注册监听器的时机:
+    AbstractApplicationContext.refresh
+        AbstractApplicationContext.registerListeners
+        
+SimpleApplicationEventMulticaster
+    存放实现ApplicationListener的beanName以及bean
+    AbstractApplicationEventMulticaster.ListenerRetriever defaultRetriever
