@@ -12,16 +12,19 @@ import org.aspectj.lang.annotation.*;
 @Slf4j
 public class AspectJTest {
 
-    @Pointcut("execution(* *.test(..))")
+    @Pointcut("execution(* *.test(..)) || execution(* *.perform(..))")
     public void test() {
     }
+
+    @Pointcut("execution(* com.*..hello(..))")
+    public void ws(){}
 
     @Before("test()")
     public void before() {
         log.info("before method execute");
     }
 
-    @After("test()")
+    @After("ws()")
     public void after() {
         log.info("after method execute");
     }

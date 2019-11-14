@@ -10,6 +10,8 @@
     <!--启用AOP注解-->
     <aop:aspectj-autoproxy/>
 
-    <bean class="provider.spring.bean.aop.AspectJTest"></bean>
+    <bean id="aspectJTest" class="provider.spring.bean.aop.AspectJTest"></bean>
+
+    <bean id="userService" class="provider.spring.bean.aop.UserServiceImpl"></bean>
 
 </beans>
