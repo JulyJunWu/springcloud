@@ -182,3 +182,12 @@ JDBC:
     PreparedStatement.executeSql            //执行SQL
     ResultSetExtractor.extractData          //结果处理
    releaseResource                          //资源回收
+   
+mybatis:
+    MapperProxyFactory
+    MapperProxy
+    MapperMethod
+    SqlSessionFactory
+    MappedStatement                     一个标签对应一个 <select> -> MappedStatement 
+    Executor
+    ResultHandler
