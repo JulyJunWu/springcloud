@@ -173,3 +173,12 @@ JDK动态代理和CGLIB字节码生成的区别:
     2.CGLIB是针对类实现代理，主要是对指定的类生成一个子类,覆盖其中的方法,因为是继承，所以该类或方法最好不要声明成final.
 
 org.springframework.aop.framework.JdkDynamicAopProxy.invoke
+
+JDBC:
+   Connection                               //获取链接
+   PreparedStatement                        //创建PreparedStatement
+   StatementCallback.doInStatement          //调用回调  
+    PreparedStatementSetter.setValues       //设置属性
+    PreparedStatement.executeSql            //执行SQL
+    ResultSetExtractor.extractData          //结果处理
+   releaseResource                          //资源回收
