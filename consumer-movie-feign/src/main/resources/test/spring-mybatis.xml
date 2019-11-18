@@ -23,9 +23,17 @@
         <property name="configLocation" value="classpath:test/mybatis/config/sqlConfig-spring.xml"></property>
     </bean>
 
+    <!--注册单个Mapper接口,一般不这样用,因为大量的Mapper都需要这样配置的话,很糟糕
     <bean id="userMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
         <property name="mapperInterface" value="provider.spring.bean.mybatis.dao.UserMapper"></property>
         <property name="sqlSessionFactory" ref="sessionFactory"></property>
+    </bean>
+    -->
+
+    <!--批量扫描Mapper接口,代替单一配置Mapper-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="provider.spring.bean.mybatis.dao"></property>
+        <property name="processPropertyPlaceHolders" value="true"></property>
     </bean>
 
 </beans>

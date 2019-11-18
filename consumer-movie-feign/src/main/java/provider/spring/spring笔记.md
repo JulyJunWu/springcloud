@@ -188,6 +188,24 @@ mybatis:
     MapperProxy
     MapperMethod
     SqlSessionFactory
-    MappedStatement                     一个标签对应一个 <select> -> MappedStatement 
+    MappedStatement                     一个标签对应一个MappedStatement,如 <select></select> -> MappedStatement 
     Executor
     ResultHandler
+
+spring整合mybatis:
+  提供SqlSessionFactoryBean构建SqlSessionFactory
+    1.实现FactoryBean,通过getObject获取得到SqlSessionFactory
+    2.实现InitializingBean接口,通过afterPropertiesSet对SqlSessionFactory进行初始化;
+    3.实现ApplicationListener通过spring的观察者模式进行通知做对应的Statement解析;
+  提供MapperFactoryBean构建单个Mapper(测试用)
+    1.实现FactoryBean用来获取对应的Mapper接口,如UserMapper
+    2.实现InitializingBean接口用来检查Configuration是否包含该Mapper,若没有则加入
+    2.注入相关所需属性,必备属性sqlSessionFactory,mapperInterface(比如UserMapper接口)
+    3.通过Spring getBean可获取对应的Mapper对象,用来与数据库打交道;  
+  批量扫描Mapper接口(MapperScannerConfigurer)(生产用):
+    通过扫描路径将一个个Mapper接口生成BeanDefinition注册到IOC中
+    设置beanName,若没有设置注解,则默认首字母小写作为beanName,否则解析指定注解的value值作为beanName(解析注解的源码AnnotationBeanNameGenerator.isStereotypeWithNameValue);
+    扫描路径的委托类(ClassPathMapperScanner):
+        职责: 扫描指定路径并注册到IOC
+        提供Filter,可以对扫描的结果进行过滤(比如指定哪些Mapper接口不需要)(ClassPathScanningCandidateComponentProvider.findCandidateComponents)
+    
