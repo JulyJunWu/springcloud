@@ -16,7 +16,7 @@ public class TxTest {
     public static ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/tx.xml");
 
     @Test
-    public void test() {
+    public void test() throws Exception{
         UserService userService = applicationContext.getBean(UserService.class);
         userService.save(new User(0,"TT",18,"女"));
     }

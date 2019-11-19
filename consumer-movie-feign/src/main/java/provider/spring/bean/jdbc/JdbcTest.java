@@ -40,7 +40,7 @@ public class JdbcTest {
     }
 
     @Test
-    public void save() {
+    public void save(){
         UserService userService = applicationContext.getBean(UserService.class);
         userService.save(new User(0, "纹丝不动", 18, "男"));
     }

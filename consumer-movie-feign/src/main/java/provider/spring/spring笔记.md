@@ -212,7 +212,6 @@ spring整合mybatis:
 事物:
     nTxNamespaceHandler
     InfrastructureAdvisorAutoProxyCreator
-    解析获取方法上@Transactional源码 SpringTransactionAnnotationParser.parseTransactionAnnotation(AnnotatedElement)
     判断当前线程是否存在事物:
         AbstractPlatformTransactionManager.getTransaction
             doGetTransaction        //从当前线程的ThreadLocal中获取ConnectionHolder对象
@@ -221,7 +220,30 @@ spring整合mybatis:
         AbstractPlatformTransactionManager.handleExistingTransaction
     事物的挂起:
         SuspendedResourcesHolder : 清空ThreadLocal的当前事物信息,然后将事物数据存放到该类
-    PlatformTransactionManager
+    PlatformTransactionManager: 事物管理顶级接口
     TransactionSynchronizationManager : 存储当前线程相关事物(ThreadLocal)
     ReflectiveMethodInvocation.proceed
     TransactionAspectSupport.invokeWithinTransaction
+    TransactionInterceptor
+    SpringTransactionAnnotationParser 解析@Transactional的类
+    DataSourceTransactionManager.DataSourceTransactionObject
+    DefaultTransactionStatus:
+        Object suspendedResources; 如果不为null,则是存放被挂起的事物数据(SuspendedResourcesHolder)
+解析获取@Transactional源码
+    TransactionAttributeSourcePointcut.matches
+        AbstractFallbackTransactionAttributeSource.getTransactionAttribute
+            AbstractFallbackTransactionAttributeSource.computeTransactionAttribute
+                AnnotationTransactionAttributeSource.findTransactionAttribute
+                  SpringTransactionAnnotationParser.parseTransactionAnnotation
+                    AnnotatedElementUtils.getMergedAnnotationAttributes
+                    SpringTransactionAnnotationParser.parseTransactionAnnotation
+发生异常,事物异常处理:
+    TransactionAspectSupport.invokeWithinTransaction
+        TransactionAspectSupport.completeTransactionAfterThrowing  #异常处理
+            TransactionAttribute.rollbackOn     #根据异常决定是否需要回滚
+            AbstractPlatformTransactionManager.rollback  #回滚
+                AbstractPlatformTransactionManager.processRollback
+                    AbstractPlatformTransactionManager.doRollback
+                        Connection.rollback()
+    即使没有发生异常的事物也不一定会commit,当DefaultTransactionStatus.rollbackOnly为true时,标志着该事物需要进行回滚
+装饰模式:   DelegatingTransactionAttribute

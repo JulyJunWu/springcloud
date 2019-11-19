@@ -29,7 +29,6 @@
 
     <bean id="userService" class="provider.spring.bean.tx.service.UserServiceImpl" primary="true">
         <property name="dataSource" ref="dataSource"></property>
-        <property name="userService2" ref="userService2"></property>
     </bean>
 
     <bean id="userService2" class="provider.spring.bean.tx.service.UserServiceImpl2">
