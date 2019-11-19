@@ -209,3 +209,19 @@ spring整合mybatis:
         职责: 扫描指定路径并注册到IOC
         提供Filter,可以对扫描的结果进行过滤(比如指定哪些Mapper接口不需要)(ClassPathScanningCandidateComponentProvider.findCandidateComponents)
     
+事物:
+    nTxNamespaceHandler
+    InfrastructureAdvisorAutoProxyCreator
+    解析获取方法上@Transactional源码 SpringTransactionAnnotationParser.parseTransactionAnnotation(AnnotatedElement)
+    判断当前线程是否存在事物:
+        AbstractPlatformTransactionManager.getTransaction
+            doGetTransaction        //从当前线程的ThreadLocal中获取ConnectionHolder对象
+            isExistingTransaction   // 判断是否存在事物 (ConnectionHolder != null && ConnectionHolder.isTransactionActive )
+    处理事物的传播:
+        AbstractPlatformTransactionManager.handleExistingTransaction
+    事物的挂起:
+        SuspendedResourcesHolder : 清空ThreadLocal的当前事物信息,然后将事物数据存放到该类
+    PlatformTransactionManager
+    TransactionSynchronizationManager : 存储当前线程相关事物(ThreadLocal)
+    ReflectiveMethodInvocation.proceed
+    TransactionAspectSupport.invokeWithinTransaction

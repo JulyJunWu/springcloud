@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx.xsd">
+
+
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+    <!--配置数据源-->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/ws"></property>
+        <property name="username" value="root"></property>
+        <property name="password" value="admin"></property>
+        <!--连接池启动时的初始值-->
+        <property name="initialSize" value="1"></property>
+        <property name="maxTotal" value="300"></property>
+        <!--最大空闲值.当经过一个高峰时间后，连接池可以慢慢将已经用不到的连接慢慢释放一部分，直减少到maxIdle为止-->
+        <property name="maxIdle" value="5"></property>
+        <!--最小空闲值.当空闲的连接数少于阀值时，连接池就会预申请去些连接，以免洪峰来时来不及申请-->
+        <property name="minIdle" value="1"></property>
+    </bean>
+
+    <bean id="userService" class="provider.spring.bean.tx.service.UserServiceImpl" primary="true">
+        <property name="dataSource" ref="dataSource"></property>
+        <property name="userService2" ref="userService2"></property>
+    </bean>
+
+    <bean id="userService2" class="provider.spring.bean.tx.service.UserServiceImpl2">
+        <property name="dataSource" ref="dataSource"></property>
+    </bean>
+
+</beans>
