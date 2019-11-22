@@ -12,6 +12,8 @@ public class DatePropertyRegistrar implements PropertyEditorRegistrar {
 
     @Override
     public void registerCustomEditors(PropertyEditorRegistry registry) {
-            registry.registerCustomEditor(Date.class,new DatePropertyEditor());
+        registry.registerCustomEditor(Date.class, new DatePropertyEditor());
+        //注册自定义的解析类
+        registry.registerCustomEditor(Toy.class, new Property2ToyEditor());
     }
 }

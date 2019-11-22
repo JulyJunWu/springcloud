@@ -12,6 +12,8 @@ AbstractBeanFactory:
     private final List<BeanPostProcessor> beanPostProcessors
     //  存放解析特殊Property属性,比如Date无法进行注入,在此添加属性解析对value解析转换为对应的类型
     private final Map<Class<?>, Class<? extends PropertyEditor>> customEditors;
+    //  存放注册的PropertyEditorRegistrar(该类存放存放的是PropertyEditor)
+    private final Set<PropertyEditorRegistrar> propertyEditorRegistrars;
     
 SimpleAliasRegistry(默认工厂的父类继承了该类): 
     Map<String, String> aliasMap = new ConcurrentHashMap(16); 存放beanName的别名
@@ -247,3 +249,11 @@ spring整合mybatis:
                         Connection.rollback()
     即使没有发生异常的事物也不一定会commit,当DefaultTransactionStatus.rollbackOnly为true时,标志着该事物需要进行回滚
 装饰模式:   DelegatingTransactionAttribute
+
+属性解析器相关接口:
+    PropertyEditor:           解析属性的类,一般都是直接继承PropertyEditorSupport就可以
+    PropertyEditorRegistrar : 用来注册解析属性的解析类,直接实现即可
+    BeanFactoryPostProcessor  通过该接口注册PropertyEditorRegistrar
+    一般而言,这种属性解析器是需要在生成bean之前进行注入加载完毕,spring一般是在BeanFactory准备完毕,扫描实现BeanFactoryPostProcessor接口类,
+    执行postProcessBeanFactory来预先处理
+    

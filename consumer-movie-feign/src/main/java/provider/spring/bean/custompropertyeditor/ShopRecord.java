@@ -9,7 +9,7 @@ import java.util.Date;
  */
 @Data
 public class ShopRecord {
-
     private Date date;
 
+    private Toy toy;
 }

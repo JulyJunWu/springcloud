@@ -22,4 +22,15 @@ public class CustomPropertyEditorTest {
 
     }
 
+    /**
+     * 解析器注入时机 : BeanFactoryPostProcessor
+     * 将自身的自定义的解析属性类注册到
+     */
+    @Test
+    public void propertyEditorTest(){
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/propertyEditor.xml");
+        ShopRecord shopRecord = applicationContext.getBean(ShopRecord.class);
+        log.info("{}", shopRecord.getToy());
+    }
+
 }
