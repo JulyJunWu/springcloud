@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+    <!--自定义属性解析-->
+    <bean id="shopRecord" class="provider.spring.bean.custompropertyeditor.ShopRecord">
+        <property name="toy" value="678|紫色|大号"></property>
+    </bean>
+
+    <!--使用自定义ConversionService
+    <bean id="conversionService" class="provider.spring.bean.converter.CustomConversionService">
+    </bean>
+    -->
+
+    <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+        <property name="converters">
+            <set>
+                <bean class="provider.spring.bean.converter.ToyConverter"></bean>
+            </set>
+        </property>
+    </bean>
+
+</beans>

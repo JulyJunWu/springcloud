@@ -156,9 +156,16 @@ SimpleApplicationEventMulticaster
     存放实现ApplicationListener的beanName以及bean
     AbstractApplicationEventMulticaster.ListenerRetriever defaultRetriever
 
+PropertyEditorRegistrySupport: 存放属性解析器,如PropertyEditor , ConversionService
+    
 ConversionService(属性转换服务):
     之前使用自定义类型转换器(PropertyEditor)从String转换为Date的方式，在Spring中还提供了另一种转换方式:使用Converter;
-
+    org.springframework.core.convert.converter.Converter<S,T> : 属性转换类 ,S输入类型,T输出类型
+    将Converter实现类注册到ConversionService
+    注意: 想要ConversionService生效,必须将ConversionService实现类注册到IOC,并且beanName必须是 conversionService
+    使用方式一: 可以自定义一个类去继承DefaultConversionService,实现InitializingBean,将Converter注册
+    方式二: 使用Spring自带ConversionServiceFactoryBean,将Converter注入属性中
+    
 AOP: AnnotationAwareAspectJAutoProxyCreator
 AbstractAutoProxyCreator.createProxy : 不管是jdk动态代理还是cglib代理都将走此方法创建对应的代理
 
@@ -254,6 +261,9 @@ spring整合mybatis:
     PropertyEditor:           解析属性的类,一般都是直接继承PropertyEditorSupport就可以
     PropertyEditorRegistrar : 用来注册解析属性的解析类,直接实现即可
     BeanFactoryPostProcessor  通过该接口注册PropertyEditorRegistrar
+    BeanWrapper: 对实例化的bean进行包装,属性解析最终也是注册到BeanWrapper中(BeanWrapper也实现了PropertyEditorRegistry)
     一般而言,这种属性解析器是需要在生成bean之前进行注入加载完毕,spring一般是在BeanFactory准备完毕,扫描实现BeanFactoryPostProcessor接口类,
     执行postProcessBeanFactory来预先处理
     
+BeanFactoryPostProcessor : 典型的实现就是PropertyPlaceholderConfigurer, 解析Properties文件,通过EL表达式取值
+BeanPostProcessor: 作用于bean创建前后,AOP其实就是实现BeanPostProcessor

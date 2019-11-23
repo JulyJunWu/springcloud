@@ -2,7 +2,9 @@ package provider.spring.bean.converter;
 
 import lombok.extern.slf4j.Slf4j;
 import org.junit.Test;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.core.convert.support.DefaultConversionService;
+import provider.spring.bean.custompropertyeditor.ShopRecord;
 
 import java.util.Date;
 
@@ -31,6 +33,35 @@ public class ConverterTest {
         Date date = conversionService.convert("2019-10-09", Date.class);
         log.info("{}", date.getTime());
 
+    }
+
+    /**
+     *     <bean id="conversionService" class="provider.spring.bean.converter.CustomConversionService">
+     *     </bean>
+     */
+    @Test
+    public void springConverter(){
+        //  转换服务
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/converter.xml");
+        ShopRecord bean = applicationContext.getBean(ShopRecord.class);
+        log.info("{}",bean.getToy());
+    }
+
+    /**
+     *   <bean id="conversionService" class="org.springframework.context.support.ConversionServiceFactoryBean">
+     *       <property name="converters">
+     *           <set>
+     *               <bean class="provider.spring.bean.converter.ToyConverter"></bean>
+     *           </set>
+     *       </property>
+     *   </bean>
+     */
+    @Test
+    public void testServiceFactoryBean(){
+        //  转换服务
+        ClassPathXmlApplicationContext applicationContext = new ClassPathXmlApplicationContext("test/converter.xml");
+        ShopRecord bean = applicationContext.getBean(ShopRecord.class);
+        log.info("{}",bean.getToy());
     }
 
 }

@@ -8,6 +8,10 @@
         <property name="toy" value="888|紫色|大号"></property>
     </bean>
 
+    <bean id="shopRecord2" class="provider.spring.bean.custompropertyeditor.ShopRecord">
+        <property name="toy" value="666|黄色|小号"></property>
+    </bean>
+
     <!--注册属性解析器
     <bean class="provider.spring.bean.custompropertyeditor.MyCustomEditorConfigurer">
     </bean>-->
